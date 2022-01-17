@@ -18,9 +18,14 @@ def set_interval(func, sec):
     return t
 
 
+# wait
+def wait(secs):
+    time.sleep(secs)
+
+
 # scroll to the bottom of the page 5 times to load more results
 def scroll(driver):
-    SCROLL_PAUSE_TIME = 0.5
+    SCROLL_PAUSE_TIME = 2
     # Get scroll height
     last_height = driver.execute_script("return document.body.scrollHeight")
     for i in range(5):

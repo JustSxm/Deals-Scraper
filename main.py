@@ -3,7 +3,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from utils import click, set_interval, scroll
+import sys
+import re
+from utils import click, set_interval, scroll, wait
 import configparser
 
 
@@ -37,7 +39,7 @@ def main():
         use_facebook(keywords, exclusions, maxPrice, minPrice, where)
 
 
-def use_facebook(keywords: list, exclusions, maxPrice, minPrice, where):
+def use_facebook(keywords: list, exclusions: list, maxPrice, minPrice, where):
     driver = webdriver.Chrome()
     driver.set_window_size(1920, 1080)
     driver.get("https://www.facebook.com/marketplace/")
@@ -78,9 +80,34 @@ def use_facebook(keywords: list, exclusions, maxPrice, minPrice, where):
         apply = driver.find_element(
             By.XPATH, "//*[text()='Apply']")
         click(driver, apply)
+    wait(5)
     scroll(driver)
-    # look at all results and insert good ones in a file.
-    # potentially send email?
+    ads = driver.find_elements(By.CSS_SELECTOR,
+                               "div.b3onmgus.ph5uu5jm.g5gj957u.buofh1pr.cbu4d94t.rj1gh0hx.j83agx80.rq0escxv.fnqts5cd.fo9g3nie.n1dktuyu.e5nlhep0.ecm0bbzt")
+    hits = []
+    for i in ads:
+        try:
+            price = i.find_element(By.CSS_SELECTOR,
+                                   "span.d2edcug0.hpfvmrgz.qv66sw1b.c1et5uql.lr9zc1uh.a8c37x1j.fe6kdd0r.mau55g9w.c8b282yb.keod5gw0.nxhoafnm.aigsh9s9.d3f4x2em.mdeji52x.a5q79mjw.g1cxx5fr.lrazzd5p.oo9gr5id").text
+            title = i.find_element(By.CSS_SELECTOR,
+                                   "span.a8c37x1j.ni8dbmo4.stjgntxs.l9j0dhe7").text
+            # check if title has exclusion keywords
+            if any(exclusions.lower() in title.lower() for exclusions in exclusions):
+                continue
+
+            # check if title has a keyword, in future this can be an option in the config (strictmode)
+            if not any(keywords.lower() in title.lower() for keywords in keywords):
+                continue
+
+            # get link
+            link = i.find_element(By.CSS_SELECTOR, "a").get_attribute(
+                "href").split("?")[0]
+            hits.append(f'{title} - ${price}\n{link}\n\n\n')
+        except:
+            pass
+        with open('hits.txt', 'wb') as f:
+            f.write(''.join(hits).encode('utf-8'))
+        # potentially send email?
 
 
 main()
