@@ -1,4 +1,5 @@
 import configparser
+from scrapy.crawler import CrawlerProcess
 from websites.facebook import Facebook
 
 
@@ -11,9 +12,9 @@ def main():
             'MaxPrice': "100",
             'MinPrice': "0",
             "EnableFacebook": "false",
-            'Where': "",
+            "FacebookCityId": "110941395597405"
         }
-        config.set('DEFAULT', '; keep where null for anywhere', None)
+        config.set('DEFAULT', '; Facebook use the id of the closest city to you for the searches, if not set it will return no ads', None)
         config.set('DEFAULT', 'Interval', "5")
         config.set('DEFAULT', '; Every minutes the bot should scrape', None)
         with open('config.ini', 'w') as configfile:
@@ -23,12 +24,14 @@ def main():
     keywords = keywords.split(",")
     exclusions = config['DEFAULT']['Exclusions']
     exclusions = exclusions.split(",")
-    maxPrice = config['DEFAULT']['MaxPrice']
-    minPrice = config['DEFAULT']['MinPrice']
-    enableFacebook = config['DEFAULT']['EnableFacebook']
-    where = config['DEFAULT']['Where']
+    max_price = config['DEFAULT']['MaxPrice']
+    min_price = config['DEFAULT']['MinPrice']
+    enable_facebook = config['DEFAULT']['EnableFacebook']
+    facebook_city_id = config['DEFAULT']['FacebookCityId']
     interval = config['DEFAULT']['Interval']
-    if(enableFacebook):
-        Facebook(keywords, exclusions, maxPrice, minPrice, where)
+    if(enable_facebook):
+        process = CrawlerProcess(settings={"FEEDS": {"facebook.json": {"format": "json", "overwrite": True},}})
+        process.crawl(Facebook, keywords, exclusions, max_price, min_price, facebook_city_id)
+        process.start()
 
 main()
