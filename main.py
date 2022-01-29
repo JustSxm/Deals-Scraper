@@ -4,6 +4,7 @@ from websites.amazon import Amazon
 from websites.ebay import Ebay
 from websites.facebook import Facebook
 from websites.kijiji import Kijiji
+from websites.lespacs import Lespacs
 
 
 def main():
@@ -18,6 +19,7 @@ def main():
             "EnableKijiji": "false",
             "EnableEbay": "false",
             "EnableAmazon": "false",
+            "EnableLespacs": "false",
             "FacebookCityId": "110941395597405"
         }
         config.set(
@@ -37,11 +39,13 @@ def main():
     enable_kijiji = config['DEFAULT']['EnableKijiji']
     enable_ebay = config['DEFAULT']['EnableEbay']
     enable_amazon = config['DEFAULT']['EnableAmazon']
+    enable_lespacs = config['DEFAULT']['EnableLespacs']
     facebook_city_id = config['DEFAULT']['FacebookCityId']
     interval = config['DEFAULT']['Interval']
     enable_facebook = False  # TODO: Remove once done
     enable_kijiji = False  # TODO: Remove once done
     enable_ebay = False  # TODO: Remove once done
+    enable_amazon = False  # TODO: Remove once done
     if(enable_facebook):
         scrape(Facebook, "facebook.json", keywords,
                exclusions, max_price, min_price, facebook_city_id)
@@ -52,6 +56,9 @@ def main():
         scrape(Ebay, "ebay.json", keywords, exclusions, max_price, min_price)
     if(enable_amazon):
         scrape(Amazon, "amazon.json", keywords,
+               exclusions, max_price, min_price)
+    if(enable_lespacs):
+        scrape(Lespacs, "lespacs.json", keywords,
                exclusions, max_price, min_price)
 
 
