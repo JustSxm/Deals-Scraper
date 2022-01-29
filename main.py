@@ -15,7 +15,7 @@ def main():
         create_config(config)
     config.read('config.ini')
     keywords = config['DEFAULT']['Keywords']
-    keywords = keywords.split(",")
+    keywords = keywords.split(" ")
     exclusions = config['DEFAULT']['Exclusions']
     exclusions = exclusions.split(",")
     max_price = config['DEFAULT']['MaxPrice']
