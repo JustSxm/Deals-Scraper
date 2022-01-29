@@ -1,6 +1,7 @@
 
 ![Python](https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue)
-Please star the repo if you found it useful! Thank you!
+
+###Please star the repo if you found it useful! Thank you!
 
 # Deals Scraper
 
