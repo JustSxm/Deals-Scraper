@@ -16,6 +16,10 @@ Deals Scraper is a Canadian tool to find good deals on websites like Facebook Ma
 - Easily add your own website if you know what you're doing
 
 
+## Requirement
+
+ - [Python](https://www.python.org/)
+
 ## Installation
 
 
