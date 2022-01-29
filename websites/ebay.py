@@ -5,11 +5,12 @@ import urllib.parse
 class Ebay(scrapy.Spider):
     name = 'ebay'
 
-    def __init__(self, keywords: list, exclusions: list,  max_price, min_price, **kwargs):
+    def __init__(self, keywords: list, exclusions: list,  max_price, min_price, strictmode, **kwargs):
 
         # build the URL
         self.exclusions = exclusions
         self.keywords = keywords
+        self.strictmode = strictmode
         url = f"https://www.ebay.com/sch/i.html?"
         url += urllib.parse.urlencode(  # LH_BIN = buy it now, _sop = newly listed
             {'_nkw': ' '.join(keywords), '_sop': '10', 'LH_BIN': '1', '_udlo': min_price, '_udhi': max_price})
@@ -35,7 +36,7 @@ class Ebay(scrapy.Spider):
                 continue
 
             # check if title has a keyword, in future this can be an option in the config (strictmode)
-            if not any(keywords.lower() in title.lower() for keywords in self.keywords):
+            if self.strictmode and not any(keywords.lower() in title.lower() for keywords in self.keywords):
                 continue
 
             yield {

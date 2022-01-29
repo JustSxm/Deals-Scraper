@@ -6,11 +6,12 @@ import re
 class Kijiji(scrapy.Spider):
     name = 'kijiji'
 
-    def __init__(self, keywords: list, exclusions: list,  max_price, min_price, **kwargs):
+    def __init__(self, keywords: list, exclusions: list,  max_price, min_price, strictmode, **kwargs):
 
         # build the URL
         self.exclusions = exclusions
         self.keywords = keywords
+        self.strictmode = strictmode
         url = f"https://www.kijiji.ca/b-buy-sell/canada/{'-'.join(keywords)}/k0c10l0?"
         url += urllib.parse.urlencode(
             {'price': f"{min_price}__{max_price}", 'ad': 'offering'})
@@ -33,7 +34,7 @@ class Kijiji(scrapy.Spider):
                 continue
 
             # check if title has a keyword, in future this can be an option in the config (strictmode)
-            if not any(keywords.lower() in title.lower() for keywords in self.keywords):
+            if self.strictmode and not any(keywords.lower() in title.lower() for keywords in self.keywords):
                 continue
 
             yield {
