@@ -90,6 +90,7 @@ Amazon is a bad website for scraping
 Lespacs is just like kijiji except it is more Quebec centered than Canada, therefore it can be a bad site for scraping if you are not from Quebec, otherwise it is a pretty good one
 
 Outside of Quebec: Lespacs is a bad website for scraping
+
 Inside of Quebec: Lespacs is a good website for scraping
 
 
