@@ -1,5 +1,7 @@
-import scrapy
+import configparser
 import urllib.parse
+
+import scrapy
 
 
 class Facebook(scrapy.Spider):
@@ -12,8 +14,14 @@ class Facebook(scrapy.Spider):
         self.keywords = keywords
         self.strictmode = strictmode
         url = f"https://www.facebook.com/marketplace/{facebook_city_id}/search?"
-        url += urllib.parse.urlencode({'query': ' '.join(keywords), 'minPrice': min_price,
-                                      'maxPrice': max_price, 'sortBy': 'creation_time_descend'})
+        config = configparser.ConfigParser(allow_no_value=False)
+        config.read('config.ini')
+        if(config['FACEBOOK']['date_listed'] != '0'):
+            url += urllib.parse.urlencode({'query': ' '.join(keywords), 'minPrice': min_price,
+                                           'maxPrice': max_price, 'sortBy': config['FACEBOOK']['sortby'], 'daysSinceListed': config['FACEBOOK']['date_listed']})
+        else:
+            url += urllib.parse.urlencode({'query': ' '.join(keywords), 'minPrice': min_price,
+                                           'maxPrice': max_price, 'sortBy': config['FACEBOOK']['sortby']})
         self.start_urls = [url]  # set the url to the spider
         super().__init__(**kwargs)
 

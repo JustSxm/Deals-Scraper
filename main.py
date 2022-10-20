@@ -1,7 +1,9 @@
 import configparser
-from twisted.internet.task import LoopingCall
-from twisted.internet import reactor
+
 from scrapy.crawler import CrawlerRunner
+from twisted.internet import reactor
+from twisted.internet.task import LoopingCall
+
 from websites.amazon import Amazon
 from websites.ebay import Ebay
 from websites.facebook import Facebook
@@ -9,7 +11,12 @@ from websites.kijiji import Kijiji
 from websites.lespacs import Lespacs
 
 
+class bcolors:
+    OKCYAN = '\033[96m'
+
+
 def main():
+    print(bcolors.OKCYAN + "[Scraper] Loading config...")
     config = configparser.ConfigParser(allow_no_value=False)
     if(len(config.read('config.ini')) < 1):
         create_config(config)
@@ -28,19 +35,25 @@ def main():
     strictmode = config['DEFAULT'].getboolean('StrictMode')
     facebook_city_id = config['DEFAULT']['FacebookCityId']
     interval = config['DEFAULT']['Interval']
+    print(bcolors.OKCYAN + "[Scraper] Loaded config.")
     if(enable_facebook):
+        print(bcolors.OKCYAN + "[Scraper] Starting Facebook...")
         scrape(Facebook, keywords, exclusions,
                max_price, min_price, interval, strictmode, facebook_city_id)
     if(enable_kijiji):
+        print(bcolors.OKCYAN + "[Scraper] Starting Kijiji...")
         scrape(Kijiji, keywords,
                exclusions, max_price, interval, min_price, strictmode)
     if(enable_ebay):
+        print(bcolors.OKCYAN + "[Scraper] Starting Ebay...")
         scrape(Ebay, keywords, exclusions, interval,
                max_price, min_price, strictmode)
     if(enable_amazon):
+        print(bcolors.OKCYAN + "[Scraper] Starting Amazon...")
         scrape(Amazon, keywords,
                exclusions, max_price, interval, min_price, strictmode)
     if(enable_lespacs):
+        print(bcolors.OKCYAN + "[Scraper] Starting Lespacs...")
         scrape(Lespacs, keywords,
                exclusions, max_price, interval, min_price, strictmode)
     reactor.run()
@@ -82,6 +95,15 @@ def create_config(config):
         'DEFAULT', '; Facebook use the id of the closest city to you for the searches, if not set it will return no ads', None)
     config.set('DEFAULT', 'Interval', "10")
     config.set('DEFAULT', '; Every minutes the bot should scrape', None)
+
+    config['FACEBOOK'] = {
+        'date_listed': "0"
+    }
+    config.set(
+        'FACEBOOK', '; 0 = off, 1 = last 24h, 7 = days and 30 = 30 days', None)
+    config.set('FACEBOOK', 'sortby', "best_match")
+    config.set(
+        'FACEBOOK', '; best_match, distance_ascend, creation_time_descend, price_ascend, price_descend', None)
     with open('config.ini', 'w') as configfile:
         config.write(configfile)
 
