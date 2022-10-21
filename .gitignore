@@ -131,3 +131,4 @@ dmypy.json
 .vscode
 # hitlist
 hits.json
+*.ini
