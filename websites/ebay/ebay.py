@@ -15,8 +15,8 @@ class Ebay(scrapy.Spider):
         self.keywords = config["DEFAULT"]["Keywords"].split(" ")
         self.exclusions = config["DEFAULT"]["Exclusions"].split(" ")
         self.strictmode = config["DEFAULT"].getboolean("StrictMode")
-        min_price = config["KIJIJI"]["MinPrice"]
-        max_price = config["KIJIJI"]["MaxPrice"]
+        min_price = config["EBAY"]["MinPrice"]
+        max_price = config["EBAY"]["MaxPrice"]
         url = f"https://www.ebay.com/sch/i.html?"
         url += urllib.parse.urlencode(  # LH_BIN = buy it now, _sop = newly listed
             {'_nkw': ' '.join(self.keywords), '_sop': '10', 'LH_BIN': '1', '_udlo': min_price, '_udhi': max_price})
