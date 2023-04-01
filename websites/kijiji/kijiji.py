@@ -1,6 +1,7 @@
 import scrapy
+
+from Ad import Ad
 from utils import print_info, print_scraper
-from websites.kijiji.models.Ad import Ad
 
 
 class Kijiji(scrapy.Spider):

@@ -1,6 +1,7 @@
 import scrapy
+
+from Ad import Ad
 from utils import print_info, print_scraper
-from websites.facebook.models.Ad import Ad
 
 
 class Facebook(scrapy.Spider):
@@ -24,16 +25,14 @@ class Facebook(scrapy.Spider):
     def parse(self, response):
         print_scraper("FACEBOOK", "Scraping...")
         allAds = []
-        not_found_selector = response.css("div span::text").getall()
-
-        # Skip if no ads found around 60 km
-        if "No results found for " in not_found_selector:
+        
+        flex_selector = response.xpath('//div[@style="max-width:1872px"]/div[2]/div')
+        if(len(flex_selector) == 0):
             print_scraper("FACEBOOK", "No results found")
             return None
         print_scraper("FACEBOOK", "Found ads")
+
         # each flex item box (each ad)
-        flex_selector = response.css(
-            "div.x8gbvx8.x78zum5.x1q0g3np.x1a02dak.x1nhvcw1.x1rdy4ex.xcud41i.x4vbgl9.x139jcc6 > div")
         for ads in flex_selector:
             try:
                 title = ads.css('span::text').getall()[1];
