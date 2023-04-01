@@ -10,6 +10,7 @@ from utils import print_info
 from websites.ebay.ebay import Ebay
 from websites.facebook.facebook import Facebook
 from websites.kijiji.kijiji import Kijiji
+from websites.lespacs.lespacs import Lespacs
 
 
 def main(config):
@@ -28,10 +29,18 @@ def main(config):
             p = Process(target=create_process, args=(Ebay, config))
             p.start()
             p.join()
+        if(config['LESPACS']['Enabled'] == 'True'):
+            #Lespacs is either currently rewriting their website or have implemented a security measure that prevents scraping
+            #p = Process(target=create_process, args=(Lespacs, config))
+            #p.start()
+            #p.join()
+        p = Process(target=create_process, args=(Lespacs, config))
+        p.start()
+        p.join()
         time.sleep(60 * interval)
 
 def create_process(classToCall, config):
-    process = CrawlerProcess(settings={"FEEDS": {"items.json": {"format": "json", "overwrite": False}, }, "USER_AGENT": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36)', "LOG_ENABLED": False})
+    process = CrawlerProcess(settings={"FEEDS": {"items.json": {"format": "json", "overwrite": False}, }, "USER_AGENT": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36', "LOG_ENABLED": True})
     if classToCall == Facebook:
         process = CrawlerProcess(settings={"FEEDS": {"items.json": {"format": "json"},},"LOG_ENABLED": False})
     
