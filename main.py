@@ -3,8 +3,6 @@ import time
 from multiprocessing import Process
 
 from scrapy.crawler import CrawlerProcess
-from twisted.internet import reactor
-from twisted.internet.task import LoopingCall
 
 from utils import print_info
 from websites.ebay.ebay import Ebay
@@ -29,14 +27,11 @@ def main(config):
             p = Process(target=create_process, args=(Ebay, config))
             p.start()
             p.join()
-        if(config['LESPACS']['Enabled'] == 'True'):
-            #Lespacs is either currently rewriting their website or have implemented a security measure that prevents scraping
+        #Lespacs is either currently rewriting their website or have implemented a security measure that prevents scraping
+        #if(config['LESPACS']['Enabled'] == 'True'):
             #p = Process(target=create_process, args=(Lespacs, config))
             #p.start()
             #p.join()
-        p = Process(target=create_process, args=(Lespacs, config))
-        p.start()
-        p.join()
         time.sleep(60 * interval)
 
 def create_process(classToCall, config):
