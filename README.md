@@ -37,10 +37,10 @@ Deals Scraper is a Canadian tool to find good deals on websites like Facebook Ma
 ## Features
 
 - Zooming fast
-- Price Range (Min, Max)
-- Keywords exclusion
-- Strict mode (must have the keywords you mentionned)
-- Repeating every amount of time specified
+- Specify a price range (Min & Max) per scraper
+- Blacklist keywords from the scraping
+- Strict mode so only ads containing your keywords are picked
+- Schedule the project to run on a recurring basis
 - Easily add your own website if you know what you're doing
 
 <a name="Requirement"/>
